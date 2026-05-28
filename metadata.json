@@ -1,0 +1,6 @@
+{
+  "name": "Baja Pro Home Improvement",
+  "description": "Professional Home Remodeling, Painting, Tile, and General Repairs in Cabo San Lucas, BCS. Recreate beautiful spaces with American standards at Baja prices.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
