@@ -1526,6 +1526,7 @@ export default function App() {
                 <div>📞 WhatsApp / Tel: <strong className="text-white">+52 624 161 6968</strong></div>
                 <div>📍 Office: <strong className="text-white">Cabo San Lucas, Baja California Sur, México</strong></div>
                 <div className="text-[10px] text-neutral-500 pt-1">{dict.footerLicense}</div>
+                <div className="text-[10px] text-neutral-500 italic pt-1">Photos courtesy of MLS Baja California Sur</div>
               </div>
             </div>
 
