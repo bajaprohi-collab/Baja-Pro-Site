@@ -247,6 +247,31 @@ const TRANSLATION = {
 export default function App() {
   const [lang, setLang] = useState<"EN" | "ES">("EN");
   const [activeSection, setActiveSection] = useState("hero");
+  const [companyEmail, setCompanyEmail] = useState<string>("");
+
+  useEffect(() => {
+    const envEmail = import.meta.env.VITE_QUOTE_RECEIVER_EMAIL;
+    if (envEmail && envEmail.trim() !== "") {
+      setCompanyEmail(envEmail);
+    } else {
+      fetch("/api/config")
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.email) {
+            setCompanyEmail(data.email);
+          } else {
+            const p1 = "info";
+            const p2 = "baja-pro.com";
+            setCompanyEmail(`${p1}@${p2}`);
+          }
+        })
+        .catch(() => {
+          const p1 = "info";
+          const p2 = "baja-pro.com";
+          setCompanyEmail(`${p1}@${p2}`);
+        });
+    }
+  }, []);
   
   // Custom states for interactive elements
   const [selectedService, setSelectedService] = useState<string>("remodeling");
@@ -1332,7 +1357,7 @@ export default function App() {
                 </a>
 
                 <a 
-                  href="mailto:info@baja-pro.com"
+                  href={`mailto:${companyEmail}`}
                   className="flex items-center space-x-3.5 p-4 rounded-xl border border-gray-150 hover:bg-neutral-50 text-neutral-900 hover:border-[#e2c227] transition-all"
                 >
                   <div className="p-3 bg-blue-50 text-[#e2c227] rounded-xl">
@@ -1340,7 +1365,7 @@ export default function App() {
                   </div>
                   <div className="text-left leading-tight">
                     <span className="text-[10px] text-neutral-400 uppercase font-black tracking-widest block">Send Email Message</span>
-                    <span className="text-xs sm:text-sm font-black break-all">info@baja-pro.com</span>
+                    <span className="text-xs sm:text-sm font-black break-all">{companyEmail}</span>
                   </div>
                 </a>
 
