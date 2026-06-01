@@ -145,18 +145,22 @@ ${notes}
 Fecha:
 ${timestamp}`;
 
+      console.log("[server] Initializing Resend SDK with API Key (length:", apiKey ? apiKey.length : 0, ") and sending to:", receiverEmail);
+
       // Initialize the official Resend SDK client
       const resendSDK = new Resend(apiKey);
 
       const responsePayload = await resendSDK.emails.send({
-        from: "Baja Pro Quotes <onboarding@resend.dev>",
+        from: "Baja Pro Home Improvement <info@baja-pro.com>",
         to: receiverEmail,
         subject: "Nueva Cotización - Baja Pro",
         text: emailText,
       });
 
+      console.log("[server] Complete Resend SDK Response:", JSON.stringify(responsePayload, null, 2));
+
       if (responsePayload.error) {
-        console.error("Resend SDK rejected mail dispatch:", responsePayload.error);
+        console.error("[server] Resend SDK returned an error payload:", responsePayload.error);
         return res.status(400).json({ 
           error: "Resend SDK rejected dispatch request", 
           details: responsePayload.error 
