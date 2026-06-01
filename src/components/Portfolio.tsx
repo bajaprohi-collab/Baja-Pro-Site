@@ -21,7 +21,7 @@ export default function Portfolio({ lang, onSelectCategoryForEstimator }: Portfo
   const filteredProjects = selectedCategory === "all"
     ? CASE_STUDIES
     : CASE_STUDIES.filter(p => p.category === selectedCategory);
-console.log(filteredProjects);
+
   return (
     <section className="py-12 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

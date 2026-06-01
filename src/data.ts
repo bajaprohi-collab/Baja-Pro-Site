@@ -1,9 +1,10 @@
-import heroBedroom from "./assets/images/hero_bedroom_1779979394696.png";
-import kitchenIsland from "./assets/images/kitchen_island_1779979426904.png";
-import kitchenClassic from "./assets/images/kitchen_classic_1779979411628.png";
-import sunsetFirepit from "./assets/images/sunset_firepit_1779979456074.png";
-import entrywayStone from "./assets/images/entryway_stone_1779979441374.png";
 import { CaseStudy, ScopeItem, ServiceCategory } from "./types";
+
+import entrywayStoneImage from "./assets/images/entryway_stone_1779979441374.png";
+import heroBedroomImage from "./assets/images/hero_bedroom_1779979394696.png";
+import kitchenClassicImage from "./assets/images/kitchen_classic_1779979411628.png";
+import kitchenIslandImage from "./assets/images/kitchen_island_1779979426904.png";
+import sunsetFirepitImage from "./assets/images/sunset_firepit_1779979456074.png";
 
 export const CASE_STUDIES: CaseStudy[] = [
   {
@@ -17,7 +18,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Solid organic Parota dining table designed for coastal temperature shift durability",
       "Hidden multi-zone variable-speed mini-split ventilation"
     ],
-    image: heroBedroom,
+    image: heroBedroomImage,
     category: "remodeling",
     standardsMet: [
       "Moisture Vapor Subfloor Spec Standard",
@@ -37,7 +38,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Intense solar UV heat-reflective acrylic finish topcoat",
       "Precision mask moldings and rust-treatment metal primer seals"
     ],
-    image: sunsetFirepit,
+    image: sunsetFirepitImage,
     category: "painting",
     standardsMet: [
       "ASTM Weather Resistance Certified Paints",
@@ -57,7 +58,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Bespoke copper piping routing with dual high-pressure sedimentation filters",
       "Low-voltage luxury under-shelf led task lighting"
     ],
-   image: kitchenIsland,
+    image: kitchenIslandImage,
     category: "bath_kitchen",
     standardsMet: [
       "American Plumbing Association Code Compliant",
@@ -77,7 +78,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       "Teak double floating vanity sealed with high-traffic marine varnishes",
       "Dynamic low-profile linear channel drain with easy silt filtration"
     ],
-    image: kitchenClassic,
+    image: kitchenClassicImage,
     category: "bath_kitchen",
     standardsMet: [
       "IAPMO Plumbing Code Standards",

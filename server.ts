@@ -3,6 +3,7 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import { Resend } from "resend";
 
 dotenv.config();
 
@@ -52,7 +53,7 @@ async function startServer() {
       const systemInstruction = `You are Tom's intelligent AI Assistant representing "Baja Pro Home Improvement", a premium general contractor and home remodeling business located in Cabo San Lucas, Baja California Sur, Mexico.
 Owner / Project Manager: Oded (Tom) Rondel.
 Contact Phone (WhatsApp): +52 624 161 6968 (with active calling and WhatsApp routing).
-Email: Bajaprohomeimprovement@gmail.com.
+Email: ${process.env.QUOTE_RECEIVER_EMAIL || "the company email address"}.
 Core motto: "American Standards. Baja Prices. Licensed & Insured."
 
 About Baja Pro:
@@ -87,6 +88,86 @@ Your Instructions:
     } catch (error: any) {
       console.error("Gemini API Error:", error);
       return res.status(500).json({ error: error.message || "Server Error calling Gemini AI" });
+    }
+  });
+
+  // API Route for receiving and sending quotes via Resend
+  app.post("/api/quote", async (req, res) => {
+    try {
+      const { name, email, phone, notes } = req.body;
+
+      // Server-side validation
+      if (!name || typeof name !== "string" || name.trim() === "") {
+        return res.status(400).json({ error: "Nombre es requerido / Name is required" });
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!email || !emailRegex.test(email)) {
+        return res.status(400).json({ error: "Email inválido / Invalid email address" });
+      }
+      if (!notes || typeof notes !== "string" || notes.trim() === "") {
+        return res.status(400).json({ error: "Descripción es requerida / Project description is required" });
+      }
+
+      const apiKey = process.env.RESEND_API_KEY;
+      const receiverEmail = process.env.QUOTE_RECEIVER_EMAIL;
+
+      if (!apiKey || apiKey === "MY_RESEND_API_KEY" || apiKey === "") {
+        console.warn("RESEND_API_KEY is not configured in environment variables.");
+        return res.status(503).json({ 
+          error: "Resend API key is not configured on the server. Please define RESEND_API_KEY in secrets." 
+        });
+      }
+
+      if (!receiverEmail || receiverEmail.trim() === "") {
+        console.warn("QUOTE_RECEIVER_EMAIL is not configured in environment variables.");
+        return res.status(503).json({
+          error: "Quotation receiver email is not configured on the server. Please define QUOTE_RECEIVER_EMAIL in secrets."
+        });
+      }
+
+      // Generate localized Mexico Central time (Cabo San Lucas is America/Mazatlan)
+      const timestamp = new Date().toLocaleString("es-MX", { timeZone: "America/Mazatlan" }) + " (Cabo UTC-7)";
+
+      const emailText = `Nueva Solicitud de Cotización
+
+Nombre:
+${name}
+
+Email:
+${email}
+
+WhatsApp:
+${phone || "No especificado"}
+
+Descripción:
+${notes}
+
+Fecha:
+${timestamp}`;
+
+      // Initialize the official Resend SDK client
+      const resendSDK = new Resend(apiKey);
+
+      const responsePayload = await resendSDK.emails.send({
+        from: "Baja Pro Quotes <onboarding@resend.dev>",
+        to: receiverEmail,
+        subject: "Nueva Cotización - Baja Pro",
+        text: emailText,
+      });
+
+      if (responsePayload.error) {
+        console.error("Resend SDK rejected mail dispatch:", responsePayload.error);
+        return res.status(400).json({ 
+          error: "Resend SDK rejected dispatch request", 
+          details: responsePayload.error 
+        });
+      }
+
+      return res.json({ success: true, messageId: responsePayload.data?.id });
+
+    } catch (error: any) {
+      console.error("Service error dispatching quotation via Resend:", error);
+      return res.status(500).json({ error: error.message || "Internal server error" });
     }
   });
 

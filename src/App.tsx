@@ -26,6 +26,13 @@ import {
   Calendar,
   Lock
 } from "lucide-react";
+
+import entrywayStoneImage from "./assets/images/entryway_stone_1779979441374.png";
+import heroBedroomImage from "./assets/images/hero_bedroom_1779979394696.png";
+import kitchenClassicImage from "./assets/images/kitchen_classic_1779979411628.png";
+import kitchenIslandImage from "./assets/images/kitchen_island_1779979426904.png";
+import sunsetFirepitImage from "./assets/images/sunset_firepit_1779979456074.png";
+
 import { CASE_STUDIES, SERVICE_INFO, ESTIMATOR_ITEMS, QUALITY_TIER_FACTORS } from "./data";
 import { Message, QualityTier, ServiceCategory, ScopeItem, ProjectEstimate } from "./types";
 
@@ -248,6 +255,8 @@ export default function App() {
   
   // Form submission success notification states
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formSending, setFormSending] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
   const [newsSubmitted, setNewsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -372,12 +381,50 @@ export default function App() {
     }
   };
 
-  const handleContactFormSubmit = (e: React.FormEvent) => {
+  const handleContactFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate real database receipt
-    setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
+    setFormSending(true);
+    setFormError(null);
+
+    // Front-end validation
+    if (!formData.name.trim()) {
+      setFormError(lang === "EN" ? "Name required" : "Nombre requerido");
+      setFormSending(false);
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
+      setFormError(lang === "EN" ? "Valid email required" : "Email válido requerido");
+      setFormSending(false);
+      return;
+    }
+    if (!formData.notes.trim()) {
+      setFormError(lang === "EN" ? "Description required" : "Descripción requerida");
+      setFormSending(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/quote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          notes: formData.notes,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send quote.");
+      }
+
+      setFormSubmitted(true);
       setFormData({
         name: "",
         email: "",
@@ -387,7 +434,18 @@ export default function App() {
         size: 200,
         quality: "premium",
       });
-    }, 5500);
+
+      // Maintain notification for some time
+      setTimeout(() => {
+        setFormSubmitted(false);
+      }, 8000);
+
+    } catch (err: any) {
+      console.error("Submission failed:", err);
+      setFormError(err.message || "Failed to send quote.");
+    } finally {
+      setFormSending(false);
+    }
   };
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
@@ -417,7 +475,7 @@ export default function App() {
       id: "remodeling",
       title: lang === "EN" ? "Remodeling" : "Remodelación",
       desc: dict.remDesc,
-      image: "/src/assets/images/hero_bedroom_1779979394696.png",
+      image: heroBedroomImage,
       categoryKey: "remodeling" as ServiceCategory,
       bullets: lang === "EN"
         ? ["Complete space optimizations", "Masonry standard extensions", "Precision structural load alignments", "Drywall-level plaster renders"]
@@ -437,7 +495,7 @@ export default function App() {
       id: "tile",
       title: lang === "EN" ? "Tile Installation" : "Instalación de Pisos y Azulejos",
       desc: dict.tileDesc,
-      image: "/src/assets/images/entryway_stone_1779979441374.png",
+      image: entrywayStoneImage,
       categoryKey: "tile" as ServiceCategory,
       bullets: lang === "EN"
         ? ["Large-format professional tile work", "Self-leveling sub-slab spacers", "Bespoke travertine pools & stairs", "Anti-leak laser grout grids"]
@@ -467,7 +525,7 @@ export default function App() {
       id: "bath_kitchen",
       title: lang === "EN" ? "Bathrooms & Kitchens" : "Baños y Cocinas",
       desc: dict.bkDesc,
-      image: "/src/assets/images/kitchen_classic_1779979411628.png",
+      image: kitchenClassicImage,
       categoryKey: "bath_kitchen" as ServiceCategory,
       bullets: lang === "EN"
         ? ["Waterfall edge quartz islands", "Anti-plague solid parota cabinetry", "Linear channel water discharges", "Triple floor pan waterproofing sealing"]
@@ -477,7 +535,7 @@ export default function App() {
       id: "outdoor",
       title: lang === "EN" ? "Outdoor Projects" : "Proyectos de Exterior",
       desc: dict.outDesc,
-      image: "/src/assets/images/sunset_firepit_1779979456074.png",
+      image: sunsetFirepitImage,
       categoryKey: "outdoor" as ServiceCategory,
       bullets: lang === "EN"
         ? ["Heavy bespoke parota sun pergolas", "Seismic-anchored supporting joints", "Built-in masonry BBQ counters", "Marine finish wood shielding stains"]
@@ -487,7 +545,7 @@ export default function App() {
       id: "custom",
       title: lang === "EN" ? "Problem Solving & Custom Work" : "Solución de Problemas y Trabajos Personalizados",
       desc: dict.customDesc,
-      image: "/src/assets/images/entryway_stone_1779979441374.png",
+      image: entrywayStoneImage,
       categoryKey: "custom" as ServiceCategory,
       bullets: lang === "EN"
         ? ["Bespoke architectural detailing", "Water leakage route diagnosis", "Smart ambient integrated setups", "Seaside carpentry creations"]
@@ -530,7 +588,7 @@ export default function App() {
         {/* Full-width Background Project Image */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/src/assets/images/hero_bedroom_1779979394696.png" 
+            src={heroBedroomImage} 
             alt="Cabo Remodeling Vision"
             className="w-full h-full object-cover scale-102"
             referrerPolicy="no-referrer"
@@ -749,7 +807,7 @@ export default function App() {
               
               <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl bg-neutral-900">
                 <img 
-                  src="/src/assets/images/kitchen_island_1779979426904.png" 
+                  src={kitchenIslandImage} 
                   alt="High quality Cabo builder project"
                   className="w-full h-[380px] object-cover group-hover:scale-101 transition-transform duration-500"
                   referrerPolicy="no-referrer"
@@ -1324,7 +1382,9 @@ export default function App() {
               {formSubmitted ? (
                 <div className="p-8 bg-emerald-50 border border-emerald-200 text-emerald-950 font-sans text-xs md:text-sm rounded-2xl flex flex-col items-center justify-center text-center space-y-4 shadow-xl animate-in fade-in duration-300 min-h-[400px]">
                   <CheckCircle2 className="w-16 h-16 text-emerald-500 animate-bounce" />
-                  <h3 className="text-lg font-black uppercase text-emerald-900">{lang === "EN" ? "Estimate Proposal Registered!" : "¡Presupuesto Registrado Exitosamente!"}</h3>
+                  <h3 className="text-lg font-black uppercase text-emerald-900">
+                    {lang === "EN" ? "Quote sent successfully!" : "¡Cotización enviada exitosamente!"}
+                  </h3>
                   <p className="max-w-md font-light leading-relaxed">{dict.contactSuccess}</p>
                 </div>
               ) : (
@@ -1342,7 +1402,8 @@ export default function App() {
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder={dict.placeholderName}
-                      className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400"
+                      disabled={formSending}
+                      className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400 disabled:bg-neutral-100 disabled:cursor-not-allowed"
                     />
                   </div>
 
@@ -1356,7 +1417,8 @@ export default function App() {
                         value={formData.email}
                         onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                         placeholder={dict.placeholderEmail}
-                        className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400"
+                        disabled={formSending}
+                        className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400 disabled:bg-neutral-100 disabled:cursor-not-allowed"
                       />
                     </div>
 
@@ -1369,7 +1431,8 @@ export default function App() {
                         value={formData.phone}
                         onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                         placeholder={dict.placeholderPhone}
-                        className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400"
+                        disabled={formSending}
+                        className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400 disabled:bg-neutral-100 disabled:cursor-not-allowed"
                       />
                     </div>
                   </div>
@@ -1383,16 +1446,25 @@ export default function App() {
                       value={formData.notes}
                       onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                       placeholder={dict.placeholderNotes}
-                      className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400"
+                      disabled={formSending}
+                      className="w-full p-4 bg-white rounded-xl text-xs md:text-sm border border-gray-200 focus:outline-none focus:ring-1 focus:ring-[#e2c227] text-neutral-800 placeholder-neutral-400 disabled:bg-neutral-100 disabled:cursor-not-allowed"
                     />
                   </div>
+
+                  {/* Operational Error Messages */}
+                  {formError && (
+                    <div className="p-4 bg-red-50 border border-red-200 text-red-900 rounded-xl text-xs sm:text-sm font-medium animate-in fade-in duration-200">
+                      ⚠️ <strong>{lang === "EN" ? "Failed to send quote." : "Fallo al enviar la cotización."}</strong> {formError}
+                    </div>
+                  )}
 
                   {/* Button Submit */}
                   <button
                     type="submit"
-                    className="w-full text-center py-4 bg-[#e2c227] text-neutral-900 rounded-xl hover:bg-neutral-900 hover:text-white font-black uppercase text-xs tracking-widest transition-colors shadow shadow-yellow-500/10 cursor-pointer"
+                    disabled={formSending}
+                    className="w-full text-center py-4 bg-[#e2c227] text-neutral-900 rounded-xl hover:bg-neutral-900 hover:text-white font-black uppercase text-xs tracking-widest transition-colors shadow shadow-yellow-500/10 cursor-pointer disabled:bg-neutral-300 disabled:text-neutral-500 disabled:cursor-not-allowed"
                   >
-                    {dict.requestAQuote}
+                    {formSending ? (lang === "EN" ? "Sending..." : "Enviando...") : dict.requestAQuote}
                   </button>
                 </form>
               )}
