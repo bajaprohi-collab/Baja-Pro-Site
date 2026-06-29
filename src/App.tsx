@@ -1369,15 +1369,20 @@ export default function App() {
                   </div>
                 </a>
 
-                <div className="flex items-center space-x-3.5 p-4 rounded-xl border border-gray-150">
-                  <div className="p-3 bg-neutral-100 text-neutral-800 rounded-xl">
+                <a 
+                  href="https://maps.app.goo.gl/kL2S46SjdW54eUf9A" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center space-x-3.5 p-4 rounded-xl border border-gray-150 hover:border-[#e2c227] transition-all group cursor-pointer"
+                >
+                  <div className="p-3 bg-neutral-100 text-neutral-800 rounded-xl group-hover:bg-[#e2c227] group-hover:text-neutral-900 transition-colors">
                     <MapPin className="w-5 h-5" />
                   </div>
                   <div className="text-left leading-tight">
                     <span className="text-[10px] text-neutral-400 uppercase font-black tracking-widest block">Primary Region Serviced</span>
-                    <span className="text-sm font-black">Cabo San Lucas, Baja California Sur, México</span>
+                    <span className="text-sm font-black group-hover:text-[#e2c227] transition-colors">Salomon de la Cruz Perez, El Tezal, C.P 23467, Cabo San Lucas, Baja California Sur, México</span>
                   </div>
-                </div>
+                </a>
 
               </div>
 
@@ -1392,7 +1397,17 @@ export default function App() {
                 </div>
                 <div className="space-y-2 text-xs text-neutral-300 font-mono">
                   <div>📱 Tel: +52 624 161 6968</div>
-                  <div>📍 Cabo San Lucas, Baja California Sur, México</div>
+                  <div>
+                    📍{" "}
+                    <a 
+                      href="https://maps.app.goo.gl/kL2S46SjdW54eUf9A" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="hover:text-[#e2c227] underline transition-colors"
+                    >
+                      Salomon de la Cruz Perez, El Tezal, C.P 23467, Cabo San Lucas, Baja California Sur, México
+                    </a>
+                  </div>
                 </div>
                 <div className="bg-neutral-950 px-3 py-2 rounded text-[10px] font-black uppercase text-[#e2c227] text-center tracking-widest">
                   “American Standards. Baja Prices.”
@@ -1609,8 +1624,20 @@ export default function App() {
             
             {/* Column 1: contact info registry (4 cols on lg) */}
             <div className="lg:col-span-4 space-y-4">
-              <div className="flex items-center text-white">
-                <Logo className="h-20 w-auto" variant="color" />
+              <div className="space-y-2">
+                <span className="text-[11px] font-black uppercase tracking-widest text-neutral-300">
+                  {lang === "EN" ? "Our Location" : "Nuestra Ubicación"}
+                </span>
+                <div className="w-full h-44 rounded-lg overflow-hidden border border-neutral-800 bg-neutral-900 shadow-md relative group">
+                  <iframe
+                    title="Baja Pro Office Location Map"
+                    src="https://maps.google.com/maps?q=Salomon%20de%20la%20Cruz%20Perez,%20El%20Tezal,%20Cabo%20San%20Lucas,%20Baja%20California%20Sur,%20Mexico&t=&z=14&ie=UTF8&iwloc=&output=embed"
+                    className="w-full h-full border-0 grayscale contrast-[1.1] brightness-[0.9] opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                </div>
               </div>
               
               <p className="text-neutral-400 text-xs font-light leading-relaxed">
@@ -1621,7 +1648,17 @@ export default function App() {
 
               <div className="space-y-1.5 text-xs">
                 <div>📞 WhatsApp / Tel: <strong className="text-white">+52 624 161 6968</strong></div>
-                <div>📍 Office: <strong className="text-white">Cabo San Lucas, Baja California Sur, México</strong></div>
+                <div>
+                  📍 Office:{" "}
+                  <a 
+                    href="https://maps.app.goo.gl/kL2S46SjdW54eUf9A" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-white hover:text-[#e2c227] underline transition-colors font-bold"
+                  >
+                    Salomon de la Cruz Perez, El Tezal, C.P 23467, Cabo San Lucas, Baja California Sur, México
+                  </a>
+                </div>
                 <div className="text-[10px] text-neutral-500 pt-1">{dict.footerLicense}</div>
                 <div className="text-[10px] text-neutral-500 italic pt-1">Photos courtesy of MLS Baja California Sur</div>
               </div>
@@ -1734,7 +1771,15 @@ export default function App() {
 
           <div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-neutral-500">
             <div>
-              &copy; {new Date().getFullYear()} Baja-Pro Home Improvement. Cabo San Lucas, Baja California Sur, México.
+              &copy; {new Date().getFullYear()} Baja-Pro Home Improvement.{" "}
+              <a 
+                href="https://maps.app.goo.gl/kL2S46SjdW54eUf9A" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-[#e2c227] underline transition-colors"
+              >
+                Salomon de la Cruz Perez, El Tezal, C.P 23467, Cabo San Lucas, Baja California Sur, México
+              </a>.
             </div>
             <div className="flex space-x-4">
               <span>{lang === "EN" ? "American Standards, Baja Prices" : "Estándares Americanos, Precios de Baja"}</span>

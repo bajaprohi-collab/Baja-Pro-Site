@@ -88,7 +88,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ text: fallbackText, isDemo: true });
     }
 
-    const systemInstruction = `You are Tom's intelligent AI Assistant representing "Baja Pro Home Improvement", a premium general contractor and home remodeling business located in Cabo San Lucas, Baja California Sur, Mexico.
+    const systemInstruction = `You are Tom's intelligent AI Assistant representing "Baja Pro Home Improvement", a premium general contractor and home remodeling business located at Salomon de la Cruz Perez, El Tezal, C.P 23467, Cabo San Lucas, Baja California Sur, Mexico.
 Owner / Project Manager: Oded (Tom) Rondel.
 Contact Phone (WhatsApp): +52 624 161 6968 (with active calling and WhatsApp routing).
 Email: ${process.env.QUOTE_RECEIVER_EMAIL || "the company email address"}.

@@ -70,10 +70,15 @@ export default function Header({
       <div className="bg-neutral-900 text-neutral-400 text-xs py-2 px-4 border-b border-neutral-800 hidden md:block">
         <div className="max-w-7xl mx-auto flex justify-between items-center font-sans tracking-wide">
           <div className="flex items-center space-x-6">
-            <span className="flex items-center space-x-1.5 hover:text-white transition-colors cursor-pointer">
+            <a 
+              href="https://maps.app.goo.gl/kL2S46SjdW54eUf9A" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="flex items-center space-x-1.5 hover:text-white transition-colors cursor-pointer"
+            >
               <MapPin className="w-3.5 h-3.5 text-[#e2c227]" />
-              <span>Cabo San Lucas, Baja California Sur, México</span>
-            </span>
+              <span>Salomon de la Cruz Perez, El Tezal, C.P 23467, Cabo San Lucas, Baja California Sur, México</span>
+            </a>
             <a href="tel:+526241616968" className="flex items-center space-x-1.5 hover:text-white transition-colors">
               <Phone className="w-3.5 h-3.5 text-[#e2c227]" />
               <span>+52 624 161 6968</span>
